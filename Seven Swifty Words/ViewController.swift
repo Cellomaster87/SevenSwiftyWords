@@ -26,6 +26,12 @@ class ViewController: UIViewController {
     }
     var level = 1
     
+    var hiddenButtons = 0 {
+        didSet {
+            print("Hidden buttons: \(hiddenButtons)")
+        }
+    }
+    
     // MARK: - Outlets & Actions
     
     // MARK: - View management
@@ -140,13 +146,14 @@ class ViewController: UIViewController {
         loadLevel()
     }
     
-    // MARK: - Methods
+    // MARK: - Action methods
     @objc func letterTapped(_ sender: UIButton) {
         guard let buttonTitle = sender.titleLabel?.text else { return }
         
         currentAnswer.text = currentAnswer.text?.appending(buttonTitle)
         activatedButtons.append(sender)
         sender.isHidden = true
+        hiddenButtons += 1
     }
     
     @objc func submitTapped(_ sender: UIButton) {
@@ -162,10 +169,21 @@ class ViewController: UIViewController {
             currentAnswer.text = ""
             score += 1
             
-            if score % 7 == 0 {
-                let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
-                present(ac, animated: true)
+            if hiddenButtons == 20 {
+                if score % 7 == 0 {
+                    let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
+                    present(ac, animated: true)
+                } else if score >= 5 {
+                    let passAlertController = UIAlertController(title: "Not bad!", message: "You can proceed or repeat the level!", preferredStyle: .alert)
+                    passAlertController.addAction(UIAlertAction(title: "Next level!", style: .default, handler: levelUp))
+                    passAlertController.addAction(UIAlertAction(title: "Let's stay here!", style: .cancel, handler: restartLevel))
+                    present(passAlertController, animated: true)
+                } else if score < 5 {
+                    let failureAlertController = UIAlertController(title: "Not good enough!", message: "Please try again", preferredStyle: .alert)
+                    failureAlertController.addAction(UIAlertAction(title: "Restart", style: .default, handler: restartLevel))
+                    present(failureAlertController, animated: true)
+                }
             }
         } else {
             let errorAlertController = UIAlertController(title: "That's not correct!", message: "Please try again...", preferredStyle: .alert)
@@ -176,23 +194,14 @@ class ViewController: UIViewController {
                 
                 for button in self.activatedButtons {
                     button.isHidden = false
+                    self.hiddenButtons -= 1
                 }
                 
                 self.activatedButtons.removeAll()
             })
 
             present(errorAlertController, animated: true)
-        }
-    }
-    
-    func levelUp(action: UIAlertAction) {
-        level += 1
-        
-        solutions.removeAll(keepingCapacity: true)
-        loadLevel()
-        
-        for button in letterButtons {
-            button.isHidden = false
+            score -= 1
         }
     }
     
@@ -201,12 +210,14 @@ class ViewController: UIViewController {
         
         for button in activatedButtons {
             button.isHidden = false
+            hiddenButtons -= 1
         }
         
         activatedButtons.removeAll()
     }
     
-    func loadLevel() {
+    // MARK: - Methods
+    func loadLevel(action: UIAlertAction! = nil) {
         var clueString = ""
         var solutionsString = ""
         var letterBits = [String]()
@@ -234,13 +245,35 @@ class ViewController: UIViewController {
         }
         cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
         answersLabel.text = solutionsString.trimmingCharacters(in: .whitespacesAndNewlines)
-        
+        score = 0
+
         letterButtons.shuffle()
         
         if letterButtons.count == letterBits.count {
             for i in 0 ..< letterButtons.count {
                 letterButtons[i].setTitle(letterBits[i], for: .normal)
             }
+        }
+    }
+    
+    func levelUp(action: UIAlertAction) {
+        level += 1
+        
+        solutions.removeAll(keepingCapacity: true)
+        loadLevel()
+        showLetterButtons()
+    }
+    
+    func restartLevel(action: UIAlertAction) {
+        solutions.removeAll(keepingCapacity: true)
+        loadLevel()
+        showLetterButtons()
+    }
+    
+    func showLetterButtons() {
+        for button in letterButtons {
+            button.isHidden = false
+            hiddenButtons -= 1
         }
     }
 }
