@@ -79,6 +79,8 @@ class ViewController: UIViewController {
         
         let buttonsView = UIView()
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
+        buttonsView.layer.borderWidth = 1
+        buttonsView.layer.borderColor = UIColor.darkGray.cgColor
         view.addSubview(buttonsView)
         
         NSLayoutConstraint.activate([
@@ -165,6 +167,21 @@ class ViewController: UIViewController {
                 ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
                 present(ac, animated: true)
             }
+        } else {
+            let errorAlertController = UIAlertController(title: "That's not correct!", message: "Please try again...", preferredStyle: .alert)
+            
+            errorAlertController.addAction(UIAlertAction(title: "OK", style: .default) {
+                [weak currentAnswer] _ in
+                currentAnswer?.text = ""
+                
+                for button in self.activatedButtons {
+                    button.isHidden = false
+                }
+                
+                self.activatedButtons.removeAll()
+            })
+
+            present(errorAlertController, animated: true)
         }
     }
     
@@ -226,8 +243,5 @@ class ViewController: UIViewController {
             }
         }
     }
-    // MARK: - Navigation
-
-
 }
 
