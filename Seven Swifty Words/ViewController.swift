@@ -18,21 +18,26 @@ class ViewController: UIViewController {
     
     var activatedButtons = [UIButton]()
     var solutions = [String]()
-    
+
     var score = 0 {
         didSet {
-            scoreLabel.text = "Score: \(score)"
+            DispatchQueue.main.async { [weak self] in
+                self?.scoreLabel.text = "Score: \(self?.score ?? 0)"
+            }
         }
     }
-    var level = 1
     
+    var level = 1
     var hiddenButtons = 0 {
         didSet {
             print("Hidden buttons: \(hiddenButtons)")
         }
     }
     
-    // MARK: - Outlets & Actions
+    // Parsing properties
+    var clueString = ""
+    var solutionsString = ""
+    var letterBits = [String]()
     
     // MARK: - View management
     override func loadView() {
@@ -142,8 +147,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        loadLevel()
+        performSelector(inBackground: #selector(loadLevel), with: nil)
     }
     
     // MARK: - Action methods
@@ -217,11 +221,17 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Methods
-    func loadLevel(action: UIAlertAction! = nil) {
-        var clueString = ""
-        var solutionsString = ""
-        var letterBits = [String]()
+    @objc func loadLevel(action: UIAlertAction! = nil) {
+        performSelector(inBackground: #selector(parseLevel), with: nil)
+        performSelector(onMainThread: #selector(updateLabels), with: nil, waitUntilDone: false)
         
+        score = 0
+        letterButtons.shuffle()
+        
+        performSelector(onMainThread: #selector(setTitle), with: nil, waitUntilDone: false)
+    }
+    
+    @objc func parseLevel() {
         if let levelFileURL = Bundle.main.url(forResource: "level\(level)", withExtension: "txt") {
             if let levelContents = try? String(contentsOf: levelFileURL) {
                 var lines = levelContents.components(separatedBy: "\n")
@@ -243,12 +253,14 @@ class ViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @objc func updateLabels() {
         cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
         answersLabel.text = solutionsString.trimmingCharacters(in: .whitespacesAndNewlines)
-        score = 0
-
-        letterButtons.shuffle()
-        
+    }
+    
+    @objc func setTitle() {
         if letterButtons.count == letterBits.count {
             for i in 0 ..< letterButtons.count {
                 letterButtons[i].setTitle(letterBits[i], for: .normal)
