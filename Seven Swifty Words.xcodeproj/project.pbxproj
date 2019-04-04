@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2D2308A72235BD9600B20D7C /* level1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2D2308A52235BD9600B20D7C /* level1.txt */; };
 		2D2308A82235BD9600B20D7C /* level2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2D2308A62235BD9600B20D7C /* level2.txt */; };
+		2DA122EA225653E30031AFC4 /* LetterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA122E9225653E30031AFC4 /* LetterButton.swift */; };
 		2DF70220223516F2006C321F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF7021F223516F2006C321F /* AppDelegate.swift */; };
 		2DF70222223516F2006C321F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF70221223516F2006C321F /* ViewController.swift */; };
 		2DF70225223516F2006C321F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DF70223223516F2006C321F /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* Begin PBXFileReference section */
 		2D2308A52235BD9600B20D7C /* level1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = level1.txt; sourceTree = "<group>"; };
 		2D2308A62235BD9600B20D7C /* level2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = level2.txt; sourceTree = "<group>"; };
+		2DA122E9225653E30031AFC4 /* LetterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterButton.swift; sourceTree = "<group>"; };
 		2DF7021C223516F2006C321F /* Seven Swifty Words.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Seven Swifty Words.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DF7021F223516F2006C321F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2DF70221223516F2006C321F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 			children = (
 				2DF7021F223516F2006C321F /* AppDelegate.swift */,
 				2DF70221223516F2006C321F /* ViewController.swift */,
+				2DA122E9225653E30031AFC4 /* LetterButton.swift */,
 				2DF70223223516F2006C321F /* Main.storyboard */,
 				2DF70226223516F3006C321F /* Assets.xcassets */,
 				2DF70228223516F3006C321F /* LaunchScreen.storyboard */,
@@ -143,6 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DA122EA225653E30031AFC4 /* LetterButton.swift in Sources */,
 				2DF70222223516F2006C321F /* ViewController.swift in Sources */,
 				2DF70220223516F2006C321F /* AppDelegate.swift in Sources */,
 			);

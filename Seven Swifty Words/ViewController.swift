@@ -14,9 +14,9 @@ class ViewController: UIViewController {
     var answersLabel: UILabel!
     var currentAnswer: UITextField!
     var scoreLabel: UILabel!
-    var letterButtons = [UIButton]()
+    var letterButtons = [LetterButton]()
     
-    var activatedButtons = [UIButton]()
+    var activatedButtons = [LetterButton]()
     var solutions = [String]()
 
     var score = 0 {
@@ -45,7 +45,6 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
         
         scoreLabel = UILabel()
-        
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
         scoreLabel.textAlignment = .right
         scoreLabel.text = "Score: 0"
@@ -131,9 +130,10 @@ class ViewController: UIViewController {
         
         for row in 0 ..< 4 {
             for column in 0 ..< 5 {
-                let letterButton = UIButton(type: .system)
+                let letterButton = LetterButton()
+                letterButton.setTitleColor(UIColor(red: 75/255, green: 142/255, blue: 247/255, alpha: 1), for: .normal)
                 letterButton.titleLabel?.font = UIFont.systemFont(ofSize: 36)
-                letterButton.setTitle("WWW", for: .normal)
+//                letterButton.setTitle("WWW", for: .normal)
                 letterButton.addTarget(self, action: #selector(letterTapped), for: .touchUpInside)
                 
                 let frame = CGRect(x: column * width, y: row * height, width: width, height: height)
@@ -151,12 +151,14 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Action methods
-    @objc func letterTapped(_ sender: UIButton) {
+    @objc func letterTapped(_ sender: LetterButton) {
         guard let buttonTitle = sender.titleLabel?.text else { return }
         
         currentAnswer.text = currentAnswer.text?.appending(buttonTitle)
         activatedButtons.append(sender)
-        sender.isHidden = true
+        UIView.animate(withDuration: 1) {
+            sender.alpha = 0
+        }
         hiddenButtons += 1
     }
     
@@ -197,7 +199,9 @@ class ViewController: UIViewController {
                 currentAnswer?.text = ""
                 
                 for button in self.activatedButtons {
-                    button.isHidden = false
+                    UIView.animate(withDuration: 1, animations: {
+                        button.alpha = 1
+                    })
                     self.hiddenButtons -= 1
                 }
                 
@@ -213,7 +217,9 @@ class ViewController: UIViewController {
         currentAnswer.text = ""
         
         for button in activatedButtons {
-            button.isHidden = false
+            UIView.animate(withDuration: 1, animations: {
+                button.alpha = 1
+            })
             hiddenButtons -= 1
         }
         
@@ -284,7 +290,9 @@ class ViewController: UIViewController {
     
     func showLetterButtons() {
         for button in letterButtons {
-            button.isHidden = false
+            UIView.animate(withDuration: 1, animations: {
+                button.alpha = 1
+            })
             hiddenButtons -= 1
         }
     }
